@@ -1,0 +1,342 @@
+@page "/factura"
+
+@page "/factura/{FacturaId:int}"
+
+@* Registro de Facturas *@
+
+@using Blazored.Toast.Services
+
+@inject IToastService ToastService
+
+
+@inject AuthenticationStateProvider Authentication
+@inject IToastService Toast
+@using BlazorToast
+@using Proyecto_Final.Models;
+@using Proyecto_Final.BLL
+
+<EditForm Model="factura">
+    <DataAnnotationsValidator />
+     
+    <div class="card shadow-lg">
+
+       
+
+            <div class="card-header">
+                <h3 class="card-title">
+                    Registro de facturas
+                    <i class="oi oi-list"></i>
+                </h3>  
+        <div class="card">
+         <a type="button" class="rz-border-radius-1 shadow border border-1 btn-lg btn btn-warning" data-toggle="tooltip"
+        data-placement="right" title="Registrar nuevo suplidor" href="suplidor">
+        <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-truck"
+            viewBox="0 0 16 16">
+            <path
+                d="M0 3.5A1.5 1.5 0 0 1 1.5 2h9A1.5 1.5 0 0 1 12 3.5V5h1.02a1.5 1.5 0 0 1 1.17.563l1.481 1.85a1.5 1.5 0 0 1 .329.938V10.5a1.5 1.5 0 0 1-1.5 1.5H14a2 2 0 1 1-4 0H5a2 2 0 1 1-3.998-.085A1.5 1.5 0 0 1 0 10.5v-7zm1.294 7.456A1.999 1.999 0 0 1 4.732 11h5.536a2.01 2.01 0 0 1 .732-.732V3.5a.5.5 0 0 0-.5-.5h-9a.5.5 0 0 0-.5.5v7a.5.5 0 0 0 .294.456zM12 10a2 2 0 0 1 1.732 1h.768a.5.5 0 0 0 .5-.5V8.35a.5.5 0 0 0-.11-.312l-1.48-1.85A.5.5 0 0 0 13.02 6H12v4zm-9 1a1 1 0 1 0 0 2 1 1 0 0 0 0-2zm9 0a1 1 0 1 0 0 2 1 1 0 0 0 0-2z" />
+        </svg>
+    </a>
+    <br />
+    <p />
+            </div>
+
+            <div class="card-body">
+                <hr>
+                <div class="row">
+
+                    @*...................... Fechas ......................*@
+
+                    <div class="form-group col-3">
+                        <label>Fecha de facturación</label>
+                        <InputDate @bind-Value="factura.FechaCreacion" class="form-control bg-fechasColor" />
+                    </div>
+                    
+                    <div class="form-group col-3">
+                        <label>Fecha de registro</label>
+                        <InputDate @bind-Value="factura.Fecha" class="form-control bg-fechasColor" />
+                    </div>
+
+                    @*...................... Nombre ......................*@
+
+                    <div class="form-group col-3">
+                        <label>Nombre factura</label>
+                        <InputText @bind-Value="factura.NombreProvedor" placeholder="Nombre factura" class="form-control" />
+                        <ValidationMessage For="@(() => factura.NombreProvedor)" />
+                        <br>
+                    </div>
+
+                </div>
+
+                <div class="row">
+
+                    @*...................... Categoria ......................*@
+
+                    <div class="form-group col-3">
+                        <label>
+                            Categoría
+                            <div class="oi oi-sort-ascending"></div>
+                        </label>
+                        <InputSelect @bind-Value="factura.CategoriaId" class="form-select text-14">
+                            <option value="0" disabled selected>Seleccione una categoria</option>
+                            @foreach (var item in CategoriaList)
+                            {
+                                <option value="@item.CategoriaId">@item.Descripcion</option>
+                            }
+                        </InputSelect>
+                        <ValidationMessage For="@(() => factura.CategoriaId)" />
+                    </div>
+
+
+
+                    @*...................... Suplidor ......................*@
+
+                    <div class="form-group col-md-3">
+                        <label>
+                            Suplidor
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor"
+                                class="bi bi-truck" viewBox="0 0 16 16">
+                                <path
+                                    d="M0 3.5A1.5 1.5 0 0 1 1.5 2h9A1.5 1.5 0 0 1 12 3.5V5h1.02a1.5 1.5 0 0 1 1.17.563l1.481 1.85a1.5 1.5 0 0 1 .329.938V10.5a1.5 1.5 0 0 1-1.5 1.5H14a2 2 0 1 1-4 0H5a2 2 0 1 1-3.998-.085A1.5 1.5 0 0 1 0 10.5v-7zm1.294 7.456A1.999 1.999 0 0 1 4.732 11h5.536a2.01 2.01 0 0 1 .732-.732V3.5a.5.5 0 0 0-.5-.5h-9a.5.5 0 0 0-.5.5v7a.5.5 0 0 0 .294.456zM12 10a2 2 0 0 1 1.732 1h.768a.5.5 0 0 0 .5-.5V8.35a.5.5 0 0 0-.11-.312l-1.48-1.85A.5.5 0 0 0 13.02 6H12v4zm-9 1a1 1 0 1 0 0 2 1 1 0 0 0 0-2zm9 0a1 1 0 1 0 0 2 1 1 0 0 0 0-2z" />
+                            </svg>
+                        </label>
+                        <select @bind="factura.SuplidorId" class="form-select text-14">
+                            <option value="0" disabled selected>Seleccione un suplidor</option>
+                            @foreach (Suplidor item in SuplidorList)
+                            {
+                                <option value="@item.SuplidorId">@item.Nombre </option>
+                            }
+                            <ValidationMessage For="@(() => factura.SuplidorId)" />
+                        </select>
+                        <br>
+                    </div>
+
+                </div>
+
+                <div class="row">
+
+                    @*...................... Codigo de Factura......................*@
+
+                   <div class="form-group col-3">
+                        <label>Número de factura</label>
+                        <InputText @bind-Value="factura.CodigoFactura" placeholder="Numero factura" class="form-control" />
+                        <ValidationMessage For="@(() => factura.CodigoFactura)" />
+                        <br>
+                    </div>
+
+                    <div class="form-group col-3">
+                        <label>Monto total de factura</label>
+                        <InputNumber @bind-Value="factura.MontoTotal" class="form-control" />
+                        <ValidationMessage For="@(() => factura.MontoTotal)" />
+                        <br>
+                    </div>
+
+                </div>
+
+
+                @*...................... Consultar Facturas ......................*@
+
+                <div class="form-group col-md-3">
+                    <p />
+                    <a style="position: absolute; top:0;  right:0; margin-right: 10px; margin-top: 339px;"
+                        class="rz-border-radius-4 shadow border border-0 btn btn-lg btn btn-warning"
+                        data-toggle="tooltip" data-placement="right" title="Ingresar al reporte de facturas"
+                        href="C_factura">
+                        Facturas
+                        <i class="oi oi-cart"></i>
+                    </a>
+                </div>
+            </div>
+
+            <a data-toggle="tooltip "
+       data-placement="right "  style="position: absolute; top:0; right:0; margin-right: 20px; margin-top: 422px; ">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                fill="currentColor " class="bi bi-chat-left-text " viewBox="0 0 16 16 ">
+                                <path
+                                    d="M14 1a1 1 0 0 1 1 1v8a1 1 0 0 1-1 1H4.414A2 2 0 0 0 3 11.586l-2 2V2a1 1 0 0 1 1-1h12zM2 0a2 2 0 0 0-2 2v12.793a.5.5 0 0 0 .854.353l2.853-2.853A1 1 0 0 1 4.414 12H14a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2z" />
+                                <path
+                                    d="M3 3.5a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5zM3 6a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9A.5.5 0 0 1 3 6zm0 2.5a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1-.5-.5z" />
+                            </svg>
+
+                            Puede consultar las facturas en el boton indicado en naranja.
+
+                        </a>
+
+               
+
+                @*...................... Botones ......................*@
+
+                <div class="card-footer">
+                    <div class="form-group text-left" display: inline-block>
+
+                        <button type="button" class="btn btn-lg btn-primary" @onclick="Nuevo" title="Nueva factura">
+                            <span class="oi oi-file"> Nuevo</span>
+                        </button>
+
+                        <button type="button" class="btn btn-lg btn-success" @onclick="Guardar"
+                            title="Guardar factura">
+                            <span class="oi oi-document"> Guardar</span>
+                        </button>
+
+                        <button type="button" class="btn btn-lg btn-danger" @onclick="Eliminar"
+                            title="Eliminar factura">
+                            <span class="oi oi-trash"> Eliminar</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+   
+</EditForm>
+
+@code {
+
+#nullable disable // Para quitar el aviso de nulls
+    Facturas factura = new Facturas();
+
+    Suplidor suplidor = new Suplidor();
+
+
+    [Parameter]
+    public int FacturaId { get; set; }
+    
+
+    [Inject]
+    public CategoriaBLL categoriaBLL { get; set; } // Inyectando BLLS
+
+    [Inject]
+    public FacturaBLL facturaBLL { get; set; } // Inyectando BLL
+
+    [Inject]
+    public SuplidorBLL suplidorBLL { get; set; } // Inyectando BLL
+
+    List<Categoria> CategoriaList = new List<Categoria>();
+
+    List<Suplidor> SuplidorList = new List<Suplidor>();
+
+
+    //-----------------------------------------------------------------------
+
+    protected override void OnInitialized()
+    {
+        factura = new Facturas();
+        suplidor = new Suplidor();
+        CategoriaList = categoriaBLL.GetList(c => true);
+        SuplidorList = suplidorBLL.GetList(c => true);
+
+        if (FacturaId > 0)
+        {
+            factura.FacturaId = FacturaId;
+            this.Buscar();
+        }
+    }
+
+    public void Nuevo() // Nuevo articulo
+    {
+        factura = new Facturas();
+        CategoriaList = categoriaBLL.GetList(c => true);
+    }
+
+    public void Guardar() // Guardar articulo
+    {
+        if (factura.NombreProvedor == string.Empty)
+        {
+            Toast.ShowWarning("Ingrese el nombre de la factura");
+            return;
+        }
+
+        if (factura.CategoriaId == 0)
+        {
+            Toast.ShowWarning("Seleccionar una categoria");
+
+            return;
+        }
+
+        if (factura.SuplidorId == 0)
+        {
+            Toast.ShowWarning("Seleccionar un suplidor");
+            return;
+        }
+
+
+
+
+
+        if (factura.CodigoFactura == "")
+        {
+            Toast.ShowWarning("Ingresar un codigo de factura");
+            return;
+        }
+
+        if (factura.MontoTotal == 0)
+        {
+            Toast.ShowWarning("Ingresar el monto total");
+            return;
+        }
+
+
+        var factura2 = facturaBLL.ExisteNombre(factura.NombreProvedor);
+        if (factura2 == null) //si no existe
+        {
+            if (facturaBLL.Guardar(factura))
+            {
+                Toast.ShowSuccess($"Factura: {factura.NombreProvedor}, Guardado correctamente");
+                factura = new Facturas();
+            }
+            else
+                Toast.ShowError("No fue posible guardar");
+        }
+        else // si existe
+        {
+            if (factura2.NombreProvedor.ToLower() == factura.NombreProvedor.ToLower() && factura2.FacturaId == factura.FacturaId)
+            {
+                if (facturaBLL.Guardar(factura))
+                {
+                    Toast.ShowSuccess($"Factura: {factura.NombreProvedor}, Guardado correctamente");
+                    factura = new Facturas();
+                }
+                else
+                    Toast.ShowError("No fue posible guardar");
+            }
+            else
+            {
+                Toast.ShowError($"Factura: {factura.NombreProvedor}, ya esta registrado");
+            }
+        }
+    }
+
+
+    public void Buscar() // Buscar articulo
+    {
+        if (this.factura.FacturaId > 0)
+        {
+            var Facturas = facturaBLL.Buscar(factura.FacturaId);
+
+            if (Facturas != null)
+            {
+                factura = Facturas;
+
+                Toast.ShowSuccess($"Factura: {factura.NombreProvedor}, encontrada ");
+            }
+            else
+            {
+                Toast.ShowWarning($"No existe una factura con este Id: {factura.FacturaId}");
+            }
+        }
+    }
+
+       public void Eliminar() // Eliminar suplidor
+    {
+        bool Eliminar;
+
+        Eliminar = facturaBLL.Eliminar(factura.FacturaId);
+
+        if (Eliminar)
+        {
+            factura = new Facturas();
+
+            Toast.ShowSuccess("Eliminado correctamente");
+        }
+        else
+            Toast.ShowError("No fue posible eliminar");
+    }
+}
