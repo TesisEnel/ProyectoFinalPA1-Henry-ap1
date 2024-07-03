@@ -1,0 +1,51 @@
+@page "/R_Pago/{facturaId:int}"
+@inject PagoBLL PagoBLL
+@using Proyecto_Final.Models
+@using System.ComponentModel.DataAnnotations
+
+@inject IToastService ToastService
+
+
+@inject AuthenticationStateProvider Authentication
+@inject IToastService Toast
+@using BlazorToast
+@using Proyecto_Final.Models;
+@using Proyecto_Final.BLL
+
+<h3>Registro de Pago</h3>
+
+<EditForm Model="pago" OnValidSubmit="HandleValidSubmit">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+
+    <div class="form-group">
+        <label for="metodo">Método de Pago</label>
+        <InputText id="metodo" @bind-Value="pago.Metodo" class="form-control" />
+        <ValidationMessage For="@(() => pago.Metodo)" />
+    </div>
+
+    <div class="form-group">
+        <label for="fecha">Fecha</label>
+        <InputDate id="fecha" @bind-Value="pago.Fecha" class="form-control" />
+    </div>
+
+    <div class="form-group">
+        <label for="monto">Monto Totales</label>
+        <InputNumber id="monto" @bind-Value="pago.MontoTotales" class="form-control" />
+    </div>
+
+    <button type="submit" class="btn btn-primary">Registrar Pago</button>
+</EditForm>
+
+@code {
+    private Pago pago = new Pago ();
+
+    [Parameter]
+    public int facturaId { get; set; }
+
+    private async Task HandleValidSubmit()
+    {
+        await PagoBLL.CrearPago(pago);
+        // Redirigir o mostrar mensaje de éxito
+    }
+}

@@ -8,22 +8,18 @@ using System.Text;
 
 namespace Proyecto_Final.Models
 {
-    public class Pago // Entidad Pago
+   public class Pago
     {
         [Key]
         public int PagoId { get; set; }
 
-        [Required(ErrorMessage = "Campo obligatorio. Seleccione un metodo de pago")]
-        public string Metodo { get; set; } // Metodo de pago       
-    
+        [Required(ErrorMessage = "Campo obligatorio. Seleccione un método de pago")]
+        public string Metodo { get; set; }
+
         public DateTime Fecha { get; set; }
         public int SuplidorId { get; set; }
-
         public int FacturaId { get; set; }
-
         public int MontoTotales { get; set; }
         public bool Estado { get; set; } = true;
-        
-
     }
 }

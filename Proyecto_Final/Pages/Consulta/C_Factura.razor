@@ -8,13 +8,13 @@
 @using Models;
 @using Proyecto_Final.BLL
 
-<EditForm Model="lista">
+<EditForm Model="listaPendientes">
 
     <a type="button" class="rz-border-radius-1 shadow border border-1 btn-lg btn btn-warning" data-toggle="tooltip"
        data-placement="right" title="Registrar nueva factura" href="factura">
         <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-cart2" viewBox="0 0 16 16">
                <path d="M0 2.5A.5.5 0 0 1 .5 2H2a.5.5 0 0 1 .485.379L2.89 4H14.5a.5.5 0 0 1 .485.621l-1.5 6A.5.5 0 0 1 13 11H4a.5.5 0 0 1-.485-.379L1.61 3H.5a.5.5 0 0 1-.5-.5zM3.14 5l1.25 5h8.22l1.25-5H3.14zM5 13a1 1 0 1 0 0 2 1 1 0 0 0 0-2zm-2 1a2 2 0 1 1 4 0 2 2 0 0 1-4 0zm9-1a1 1 0 1 0 0 2 1 1 0 0 0 0-2zm-2 1a2 2 0 1 1 4 0 2 2 0 0 1-4 0z"/>
-                              </svg>
+        </svg>
     </a>
     <br/>
     <p/>
@@ -25,7 +25,7 @@
             <h4>
                 <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-card-checklist" viewBox="0 0 16 16">
                     <path d="M14.5 3a.5.5 0 0 1 .5.5v9a.5.5 0 0 1-.5.5h-13a.5.5 0 0 1-.5-.5v-9a.5.5 0 0 1 .5-.5h13zm-13-1A1.5 1.5 0 0 0 0 3.5v9A1.5 1.5 0 0 0 1.5 14h13a1.5 1.5 0 0 0 1.5-1.5v-9A1.5 1.5 0 0 0 14.5 2h-13z"/>
-                    <path d="M7 5.5a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1-.5-.5zm-1.496-.854a.5.5 0 0 1 0 .708l-1.5 1.5a.5.5 0 0 1-.708 0l-.5-.5a.5.5 0 1 1 .708-.708l.146.147 1.146-1.147a.5.5 0 0 1 .708 0zM7 9.5a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1-.5-.5zm-1.496-.854a.5.5 0 0 1 0 .708l-1.5 1.5a.5.5 0 0 1-.708 0l-.5-.5a.5.5 0 0 1 .708-.708l.146.147 1.146-1.147a.5.5 0 0 1 .708 0z"/>
+                    <path d="M7 5.5a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1-.5-.5zm-1.496-.854a.5.5 0 0 1 0 .708l-1.5 1.5a.5.5 0 0 1-.708 0l-.5-.5a.5.5 0 1 1 .708-.708l.146.147 1.146-1.147a.5.5 0 0 1 .708 0z"/>
                 </svg> Consulta Factura
                 <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-clipboard-check-fill" viewBox="0 0 16 16">
                     <path fill-rule="evenodd" d="M9 2.5a.5.5 0 0 1 .5-.5h3a.5.5 0 0 1 0 1h-.39l1.4 7a2.5 2.5 0 1 1-.98.195l-.189-.938-2.43 3.527A.5.5 0 0 1 9.5 13H4.95a2.5 2.5 0 1 1 0-1h4.287l2.831-4.11L11.09 3H9.5a.5.5 0 0 1-.5-.5ZM3.915 12a1.5 1.5 0 1 0 0 1H2.5a.5.5 0 0 1 0-1h1.415Zm8.817-.789A1.499 1.499 0 0 0 13.5 14a1.5 1.5 0 0 0 .213-2.985l.277 1.387a.5.5 0 0 1-.98.196l-.278-1.387Z"/>
@@ -82,56 +82,94 @@
             <tr class="table">
                 <th>Id factura</th>
                 <th>Nombre proveedor</th>
-                <th>Categoría</th>               
+                <th>Categoría</th>
                 <th>Número de Factura</th>
                 <th>Fecha de ingreso</th>
                 <th>Monto</th>
                 <th>Fecha de facturación</th>
+                <th>Acciones</th>
             </tr>
             </thead>
             <tbody>
 
-            @if (lista.Count == 0)
+            @if (listaPendientes.Count == 0)
             {
                 <span>Empty</span>
             }
             else
             {
-                @foreach (var item in lista)
+                @foreach (var item in listaPendientes)
                 {
                     if (item.FacturaId > 0) 
-                           {
-                    descripcion = categoriaBLL.Buscar(item.CategoriaId);
-                    if (descripcion == null) break;
-                    <tr>
-                        <td>@item.FacturaId</td>
-
-                        <td>@item.NombreProvedor</td>
-
-                        <td>@descripcion.Descripcion</td>
-                      
-                        <td> @item.CodigoFactura</td>
-
-                        <td> @item.Fecha</td>
-
-                        <td>RD$ @item.MontoTotal</td>
-
-                        <td>@item.FechaCreacion.ToString("dd/MM/yyyy")</td>
-                        <button type="button" class="btn btn-lg btn-danger" @onclick="Eliminar"
-                            title="Eliminar factura">
-                            <span class="oi oi-trash"> Eliminar</span>
-                              </button>
-                        <td>
-                           
-                        </td>
-                    </tr>
+                    {
+                        descripcion = categoriaBLL.Buscar(item.CategoriaId);
+                        if (descripcion == null) break;
+                        <tr>
+                            <td>@item.FacturaId</td>
+                            <td>@item.NombreProvedor</td>
+                            <td>@descripcion.Descripcion</td>
+                            <td>@item.CodigoFactura</td>
+                            <td>@item.Fecha</td>
+                            <td>RD$ @item.MontoTotal</td>
+                            <td>@item.FechaCreacion.ToString("dd/MM/yyyy")</td>
+                            <td>
+                                <button type="button" class="btn btn-lg btn-danger" @onclick="() => Eliminar(item)"
+                                    title="Eliminar factura">
+                                    <span class="oi oi-trash"> Eliminar</span>
+                                </button>
+                                <button type="button" class="btn btn-lg btn-success" @onclick="() => RegistrarPago(item)"
+                                    title="Registrar pago">
+                                    <span class="oi oi-check"> Pagar</span>
+                                </button>
+                            </td>
+                        </tr>
+                    }
                 }
             }
-        }
             </tbody>
         </table>
     </div>
 </EditForm>
+
+<div class="card mt-4">
+    <div class="card-header">
+        <h4>Facturas Pagadas</h4>
+    </div>
+    <table class="table table-light table-striped table-bordered">
+        <thead class="thead">
+        <tr class="table">
+            <th>Id factura</th>
+            <th>Nombre proveedor</th>
+            <th>Categoría</th>
+            <th>Número de Factura</th>
+            <th>Fecha de ingreso</th>
+            <th>Monto</th>
+            <th>Fecha de facturación</th>
+        </tr>
+        </thead>
+        <tbody>
+        @if (listaPagadas.Count == 0)
+        {
+            <span>Empty</span>
+        }
+        else
+        {
+            @foreach (var item in listaPagadas)
+            {
+                <tr>
+                    <td>@item.FacturaId</td>
+                    <td>@item.NombreProvedor</td>
+                    <td>@item.Categoria.Descripcion</td>
+                    <td>@item.CodigoFactura</td>
+                    <td>@item.Fecha</td>
+                    <td>RD$ @item.MontoTotal</td>
+                    <td>@item.FechaCreacion.ToString("dd/MM/yyyy")</td>
+                </tr>
+            }
+        }
+        </tbody>
+    </table>
+</div>
 
 @code {
 
@@ -143,7 +181,8 @@
 
     public DateOnly Fecha { get; set; }
 
-    public List<Facturas> lista { get; set; } = new List<Facturas>();
+    public List<Facturas> listaPendientes { get; set; } = new List<Facturas>();
+    public List<Facturas> listaPagadas { get; set; } = new List<Facturas>();
 
     public Facturas factura { get; set; } = new Facturas();
 
@@ -163,65 +202,74 @@
     protected override void OnInitialized()
     {
         Filtro = "0";
-        lista = facturaBLL.GetList(e => true);
+        listaPendientes = facturaBLL.GetList(e => true);
     }
 
     private void Consultar()
     {
-        lista = new List<Facturas>();
+        listaPendientes = new List<Facturas>();
         factura = new Facturas();
-        lista = facturaBLL.GetList(e => true);
+        listaPendientes = facturaBLL.GetList(e => true);
         
         if (Criterio != null)
         {
             switch (Filtro)
             {
-                
                 case "1": //Código
-                    lista = facturaBLL.GetList(e => e.FacturaId == int.Parse(Criterio));
+                    listaPendientes = facturaBLL.GetList(e => e.FacturaId == int.Parse(Criterio));
                     break;
                 case "2": // Nombre
-                    lista = facturaBLL.GetList(p => p.NombreProvedor.ToLower().Contains(Criterio.ToLower()));
+                    listaPendientes = facturaBLL.GetList(p => p.NombreProvedor.ToLower().Contains(Criterio.ToLower()));
                     break;
                 case "3": // Categoria
-                    lista = facturaBLL.GetList(p => p.Categoria.Descripcion.ToLower().Contains(Criterio.ToLower())); 
+                    listaPendientes = facturaBLL.GetList(p => p.Categoria.Descripcion.ToLower().Contains(Criterio.ToLower())); 
                     break;
                 case "4": // codigo de factura
-                    lista = facturaBLL.GetList(p => p.CodigoFactura.ToLower().Contains(Criterio.ToLower()));
+                    listaPendientes = facturaBLL.GetList(p => p.CodigoFactura.ToLower().Contains(Criterio.ToLower()));
                     break;
                 case "5": // MontoTotal
-                    lista = facturaBLL.GetList(p => p.MontoTotal == int.Parse(Criterio));
+                    listaPendientes = facturaBLL.GetList(p => p.MontoTotal == int.Parse(Criterio));
                     break;
             }
         }
         else
         {
-            lista = facturaBLL.GetList(e => e.FechaCreacion >= fechaDesde && e.FechaCreacion <= fechaHasta);
+            listaPendientes = facturaBLL.GetList(e => e.FechaCreacion >= fechaDesde && e.FechaCreacion <= fechaHasta);
         }
-
-        
     }
-       public void Eliminar()
-       {
-    if (factura != null && factura.FacturaId > 0)
+
+    public void Eliminar(Facturas facturaAEliminar)
     {
-        bool eliminado = facturaBLL.Eliminar(factura.FacturaId);
-        if (eliminado)
+        if (facturaAEliminar != null && facturaAEliminar.FacturaId > 0)
         {
-            lista.Remove(factura);
-            factura = new Facturas();
-            Toast.ShowSuccess("Factura eliminada correctamente");
+            bool eliminado = facturaBLL.Eliminar(facturaAEliminar.FacturaId);
+            if (eliminado)
+            {
+                listaPendientes.Remove(facturaAEliminar);
+                Toast.ShowSuccess("Factura eliminada correctamente");
+            }
+            else
+            {
+                Toast.ShowError("No se pudo eliminar la factura");
+            }
         }
         else
         {
-            Toast.ShowError("No se pudo eliminar la factura");
+            Toast.ShowWarning("No hay factura seleccionada");
         }
     }
-    else
+
+    public void RegistrarPago(Facturas facturaAPagar)
     {
-        Toast.ShowWarning("No hay factura seleccionada");
-    }
-
-
+        if (facturaAPagar != null && facturaAPagar.FacturaId > 0)
+        {
+            listaPendientes.Remove(facturaAPagar);
+            listaPagadas.Add(facturaAPagar);
+            Toast.ShowSuccess("Factura pagada correctamente");
+        }
+        else
+        {
+            Toast.ShowWarning("No hay factura seleccionada");
+        }
     }
 }

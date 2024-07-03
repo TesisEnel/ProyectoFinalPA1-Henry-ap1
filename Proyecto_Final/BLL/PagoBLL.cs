@@ -13,9 +13,9 @@ using System.Threading.Tasks;
 
 namespace Proyecto_Final.BLL // BLL Para el metodo de pago
 {
-    public class PagoBLL
+public class PagoBLL
     {
-        private ApplicationDbContext contexto;
+        private readonly ApplicationDbContext contexto;
 
         public PagoBLL(ApplicationDbContext _contexto)
         {
@@ -37,7 +37,6 @@ namespace Proyecto_Final.BLL // BLL Para el metodo de pago
             return pago;
         }
 
-
         public List<Pago> GetList(Expression<Func<Pago, bool>> pago)
         {
             List<Pago> Lista = new List<Pago>();
@@ -54,6 +53,49 @@ namespace Proyecto_Final.BLL // BLL Para el metodo de pago
                 throw;
             }
             return Lista;
+        }
+
+        public async Task CrearPago(Pago pago)
+        {
+            try
+            {
+                contexto.Pago.Add(pago);
+                await contexto.SaveChangesAsync();
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        public async Task ActualizarPago(Pago pago)
+        {
+            try
+            {
+                contexto.Entry(pago).State = EntityState.Modified;
+                await contexto.SaveChangesAsync();
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        public async Task EliminarPago(int id)
+        {
+            try
+            {
+                var pago = await contexto.Pago.FindAsync(id);
+                if (pago != null)
+                {
+                    contexto.Pago.Remove(pago);
+                    await contexto.SaveChangesAsync();
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
         }
     }
 }
